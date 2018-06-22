@@ -44,34 +44,6 @@ interface TouchValue extends TouchHandlers {
   options?: AddEventListenerOptions
 }
 
-const touchstart = (event: TouchEvent, wrapper: TouchWrapper) => {
-  const touch = event.changedTouches[0]
-  wrapper.touchstartX = touch.clientX
-  wrapper.touchstartY = touch.clientY
-
-  wrapper.start &&
-    wrapper.start(Object.assign(event, wrapper))
-}
-
-const touchend = (event: TouchEvent, wrapper: TouchWrapper) => {
-  const touch = event.changedTouches[0]
-  wrapper.touchendX = touch.clientX
-  wrapper.touchendY = touch.clientY
-
-  wrapper.end &&
-    wrapper.end(Object.assign(event, wrapper))
-
-  handleGesture(wrapper)
-}
-
-const touchmove = (event: TouchEvent, wrapper: TouchWrapper) => {
-  const touch = event.changedTouches[0]
-  wrapper.touchmoveX = touch.clientX
-  wrapper.touchmoveY = touch.clientY
-
-  wrapper.move && wrapper.move(Object.assign(event, wrapper))
-}
-
 const handleGesture = (wrapper: TouchWrapper) => {
   const { touchstartX, touchendX, touchstartY, touchendY } = wrapper
   const dirRatio = 0.5
@@ -88,6 +60,34 @@ const handleGesture = (wrapper: TouchWrapper) => {
     wrapper.up && (touchendY < touchstartY - minDistance) && wrapper.up(wrapper)
     wrapper.down && (touchendY > touchstartY + minDistance) && wrapper.down(wrapper)
   }
+}
+
+function touchstart (event: TouchEvent, wrapper: TouchWrapper) {
+  const touch = event.changedTouches[0]
+  wrapper.touchstartX = touch.clientX
+  wrapper.touchstartY = touch.clientY
+
+  wrapper.start &&
+    wrapper.start(Object.assign(event, wrapper))
+}
+
+function touchend (event: TouchEvent, wrapper: TouchWrapper) {
+  const touch = event.changedTouches[0]
+  wrapper.touchendX = touch.clientX
+  wrapper.touchendY = touch.clientY
+
+  wrapper.end &&
+    wrapper.end(Object.assign(event, wrapper))
+
+  handleGesture(wrapper)
+}
+
+function touchmove (event: TouchEvent, wrapper: TouchWrapper) {
+  const touch = event.changedTouches[0]
+  wrapper.touchmoveX = touch.clientX
+  wrapper.touchmoveY = touch.clientY
+
+  wrapper.move && wrapper.move(Object.assign(event, wrapper))
 }
 
 function inserted (el: TouchHTMLElement, binding: VNodeDirective, vnode: VNode) {
